@@ -80,7 +80,7 @@ while (true) {
                 print("Purchased hacknet Node with index " + res);
             };
         } else {
-            if (tenLevelCost < coresCost) {
+            if (tenLevelCost < coresCost && level <= 200) {
                 level = level + 10;
             }
             if (ramCost < coresCost && ram < 64) {
