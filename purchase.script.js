@@ -67,25 +67,32 @@ while (true) {
     var ram = hacknet.getNodeStats(0).ram;
     var cores = hacknet.getNodeStats(0).cores;
     var levelCost = hacknet.getLevelUpgradeCost(0, 1);
+    var tenLevelCost = hacknet.getLevelUpgradeCost(0, 10);
     var ramCost = hacknet.getRamUpgradeCost(0, 1);
     var coresCost = hacknet.getCoreUpgradeCost(0, 1)
     var hacknetCost = hacknet.getPurchaseNodeCost();
 
     if (isAllSameThanFirst()) {
-        if (hacknetCost < ramCost) {
+        if (hacknetCost < tenLevelCost) {
             cnt++;
             while (hacknet.numNodes() < cnt) {
                 res = hacknet.purchaseNode();
                 print("Purchased hacknet Node with index " + res);
             };
         } else {
-            level = level + 10;
+            if (tenLevelCost < coresCost) {
+                level = level + 10;
+            }
             if (ramCost < coresCost) {
                 ram = ram * 2;
             } else {
                 cores++;
             }
         }
+    }
+
+    if (ram > 64) {
+        ram = 64;
     }
 
     print("init cnt : " + cnt);
