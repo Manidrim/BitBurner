@@ -81,7 +81,7 @@ while (true) {
         } else {
             level = level + 10;
             if (ramCost < coresCost) {
-                ram++;
+                ram = ram * 2;
             } else {
                 cores++;
             }
