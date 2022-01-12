@@ -83,16 +83,12 @@ while (true) {
             if (tenLevelCost < coresCost) {
                 level = level + 10;
             }
-            if (ramCost < coresCost) {
+            if (ramCost < coresCost && ram < 64) {
                 ram = ram * 2;
-            } else {
+            } else if (coresCost < hacknetCost) {
                 cores++;
             }
         }
-    }
-
-    if (ram > 64) {
-        ram = 64;
     }
 
     print("init cnt : " + cnt);
