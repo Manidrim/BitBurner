@@ -57,10 +57,15 @@ function upgrade() {
 disableLog("getServerMoneyAvailable");
 disableLog("sleep");
 
-var cnt = 10;
-var level = 150;
-var ram = 32;
-var cores = 8;
+if (hacknet.numNodes() == 0) {
+    hacknet.purchaseNode();
+    hacknet.purchaseNode();
+}
+
+var cnt = 2;
+var level = 10;
+var ram = 1;
+var cores = 1;
 while (true) {
     var cnt = hacknet.numNodes();
     var level = hacknet.getNodeStats(0).level;
@@ -73,7 +78,7 @@ while (true) {
     var hacknetCost = hacknet.getPurchaseNodeCost();
 
     if (isAllSameThanFirst()) {
-        if (hacknetCost < coresCost || cores == 16) {
+        if ((hacknetCost < coresCost * 5 && hacknetCost < tenLevelCost) || cores == 16) {
             cnt++;
             while (hacknet.numNodes() < cnt) {
                 res = hacknet.purchaseNode();
@@ -82,6 +87,9 @@ while (true) {
         } else {
             if (tenLevelCost < coresCost && level < 200) {
                 level = level + 10;
+                if (level > 200) {
+                    level = 200;
+                }
             }
             if (ramCost < coresCost && ram < 64) {
                 ram = ram * 2;
