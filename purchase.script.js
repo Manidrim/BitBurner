@@ -3,12 +3,13 @@ function myMoney() {
 }
 
 function isAllSameThanFirst() {
+    var cnt = hacknet.numNodes();
     var nodeStats = hacknet.getNodeStats(0);
     var level = nodeStats.level;
     var ram = nodeStats.ram;
     var cores = nodeStats.cores;
 
-    for (var i = 1; i < cnt; i++) {
+    for (var i = 1; i < cnt - 1; i++) {
         var nodeStatsOthers = hacknet.getNodeStats(i);
         var levelOther = nodeStatsOthers.level;
         var ramOther = nodeStatsOthers.ram;
@@ -26,12 +27,13 @@ function mySleep()
 }
 
 function upgrade() {
+    var cnt = hacknet.numNodes();
     for (var i = 0; i < cnt; i++) {
         while (hacknet.getNodeStats(i).level < level) {
             var cost = hacknet.getLevelUpgradeCost(i, 1);
             while (myMoney() < cost) {
                 print("Lvl Need $" + cost + " . Have $" + myMoney());
-                mySleep();
+                sleepTimeToCost(cost);
             }
             res = hacknet.upgradeLevel(i, 1);
         };
@@ -39,7 +41,7 @@ function upgrade() {
             var cost = hacknet.getRamUpgradeCost(i, 1);
             while (myMoney() < cost) {
                 print("RAM Need $" + cost + " . Have $" + myMoney());
-                mySleep();
+                sleepTimeToCost(cost);
             }
             res = hacknet.upgradeRam(i, 1);
         };
@@ -47,11 +49,25 @@ function upgrade() {
             var cost = hacknet.getCoreUpgradeCost(i, 1);
             while (myMoney() < cost) {
                 print("CORE Need $" + cost + " . Have $" + myMoney());
-                mySleep();
+                sleepTimeToCost(cost);
             }
             res = hacknet.upgradeCore(i, 1);
         };
     };
+}
+
+function sleepTimeToCost(cost)
+{
+    var money = myMoney();
+    sleep(1000);
+    var moneyPlusOneSecond = myMoney();
+    hacknetLastTOCost = cost - moneyPlusOneSecond;
+
+    var moneyPerSeconde = moneyPlusOneSecond - money;
+    var timeSleep = hacknetLastTOCost / moneyPerSeconde * 1000;
+    print("Money per second: " + moneyPerSeconde);
+    print("Time before purchase : " + timeSleep);
+    sleep(timeSleep);
 }
 
 disableLog("getServerMoneyAvailable");
@@ -83,6 +99,8 @@ while (true) {
             while (hacknet.numNodes() < cnt) {
                 res = hacknet.purchaseNode();
                 print("Purchased hacknet Node with index " + res);
+                // TODO faire une fonction qui calcule le temps de sleep + 1s
+                sleepTimeToCost(hacknetCost)
             };
         } else {
             if (tenLevelCost < coresCost && level < 200) {
