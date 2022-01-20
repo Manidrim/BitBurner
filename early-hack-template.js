@@ -1,3 +1,8 @@
+// import * as namespace from "script filename"; //Import all functions from script
+// import {fn1, fn2, ...} from "script filename"; //Import specific functions from script
+
+import * as fileName from "fileName.js";
+
 let globalNs;
 let argsZero;
 
@@ -7,9 +12,15 @@ export function myPrint(toPrint) {
 }
 
 export async function main(ns) {
+	
 	globalNs = ns;
     argsZero = ns.args[0];
 	
+	myPrint('The START on ' + argsZero);
+	let earlyHackFileName = fileName.getEarlyHackFileName();
+	let hackFileName = fileName.getHackFileName();
+
+	myPrint('The START on ' + argsZero);
 	myPrint('The START on ' + argsZero);
 	
 	let hostName = globalNs.getHostname();
@@ -20,20 +31,21 @@ export async function main(ns) {
     this.toPrint
 	myPrint(hostName);
 	myPrint(scans);
-    
 
 	for(let i = 0; i < scans.length; i++) {
 		let serverToHack = scans[i];
 		myPrint(serverToHack);
-		isFileExist = globalNs.fileExists('early-hack-template.js', serverToHack);
+		isFileExist = globalNs.fileExists(hackFileName, serverToHack);
 		if (isFileExist) {
-			myPrint('File exist');
+			myPrint('File exist -> ' + hackFileName);
 			continue;
 		}
 
-		myPrint('File doesn\'t exist');
+		myPrint('File doesn\'t exist -> ' + hackFileName);
 		let securityLevel = globalNs.getServerSecurityLevel(serverToHack);
-		myPrint('securityLevel : ' . securityLevel);
+		myPrint('securityLevel : ' + securityLevel);
+		
+		// scp();
 		
 
 /*
