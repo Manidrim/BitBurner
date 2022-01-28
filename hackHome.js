@@ -1,6 +1,7 @@
 let globalNs;
 let argsZero;
 let alreadyHack;
+let levelHome;
 
 export function myPrint(toPrint) {
     globalNs.tprint(toPrint);
@@ -20,6 +21,9 @@ export async function main(ns) {
     myPrint(hostName);
     myPrint(scans);
 
+    levelHome = globalNs.getHackingLevel();
+    myPrint('LEVEL HOME ! : ' + levelHome);
+
     await scanTarget(argsZero);
 }
 
@@ -36,8 +40,15 @@ export async function scanTarget(targetStart) {
             continue;
         }
 
+        let levelRequireToHackSeveur = globalNs.getServerRequiredHackingLevel(target);
+        if (levelRequireToHackSeveur > globalNs.getHackingLevel()) {
+            myPrint("I don't have the level ! I need level : " + levelRequireToHackSeveur);
+            continue;
+        }
+
         var moneyThresh = globalNs.getServerMaxMoney(target) * 0.75;
         var securityThresh = globalNs.getServerMinSecurityLevel(target) + 5;
+        
         
         globalNs.brutessh(target);
         globalNs.ftpcrack(target)
