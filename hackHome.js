@@ -9,22 +9,23 @@ export function myPrint(toPrint) {
 
 /** @param {NS} ns **/
 export async function main(ns) {
+    while (true) {
+        globalNs = ns;
+        argsZero = ns.args[0];
+        alreadyHack = [];
+        
+        myPrint('The START on ' + argsZero);
 
-    globalNs = ns;
-    argsZero = ns.args[0];
-    alreadyHack = [];
+        let hostName = globalNs.getHostname();
+        let scans = globalNs.scan();
+        myPrint(hostName);
+        myPrint(scans);
 
-    myPrint('The START on ' + argsZero);
+        levelHome = globalNs.getHackingLevel();
+        myPrint('LEVEL HOME ! : ' + levelHome);
 
-    let hostName = globalNs.getHostname();
-    let scans = globalNs.scan();
-    myPrint(hostName);
-    myPrint(scans);
-
-    levelHome = globalNs.getHackingLevel();
-    myPrint('LEVEL HOME ! : ' + levelHome);
-
-    await scanTarget(argsZero);
+        await scanTarget(argsZero);
+    }
 }
 
 export async function scanTarget(targetStart) {
@@ -49,10 +50,17 @@ export async function scanTarget(targetStart) {
         var moneyThresh = globalNs.getServerMaxMoney(target) * 0.75;
         var securityThresh = globalNs.getServerMinSecurityLevel(target) + 5;
         
-        
-        globalNs.brutessh(target);
-        globalNs.ftpcrack(target)
-        globalNs.relaysmtp(target);   
+        if (globalNs.fileExists('BruteSSH.exe', 'home')) {
+            globalNs.brutessh(target);
+        }
+
+        if (globalNs.fileExists('FTPCrack.exe', 'home')) {
+            globalNs.ftpcrack(target)
+        }
+
+        if (globalNs.fileExists('relaySMTP.exe', 'home')) {
+            globalNs.relaysmtp(target);
+        }
 
         globalNs.nuke(target);
         if (globalNs.getServerSecurityLevel(target) > securityThresh) {
